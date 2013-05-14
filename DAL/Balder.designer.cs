@@ -23,7 +23,7 @@ namespace DAL
 	
 	
 	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="dm76_5")]
-	public partial class DbConnectDataContext : System.Data.Linq.DataContext
+	public partial class BalderDataContext : System.Data.Linq.DataContext
 	{
 		
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
@@ -38,31 +38,31 @@ namespace DAL
     partial void DeleteUser(User instance);
     #endregion
 		
-		public DbConnectDataContext() : 
+		public BalderDataContext() : 
 				base(global::DAL.Properties.Settings.Default.dm76_5ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public DbConnectDataContext(string connection) : 
+		public BalderDataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public DbConnectDataContext(System.Data.IDbConnection connection) : 
+		public BalderDataContext(System.Data.IDbConnection connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public DbConnectDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public BalderDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public DbConnectDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public BalderDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
