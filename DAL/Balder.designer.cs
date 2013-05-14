@@ -30,12 +30,21 @@ namespace DAL
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertProduct(Product instance);
-    partial void UpdateProduct(Product instance);
-    partial void DeleteProduct(Product instance);
+    partial void InsertCredential(Credential instance);
+    partial void UpdateCredential(Credential instance);
+    partial void DeleteCredential(Credential instance);
     partial void InsertUser(User instance);
     partial void UpdateUser(User instance);
     partial void DeleteUser(User instance);
+    partial void InsertProduct(Product instance);
+    partial void UpdateProduct(Product instance);
+    partial void DeleteProduct(Product instance);
+    partial void InsertShoppingList(ShoppingList instance);
+    partial void UpdateShoppingList(ShoppingList instance);
+    partial void DeleteShoppingList(ShoppingList instance);
+    partial void InsertShoppingListsUser(ShoppingListsUser instance);
+    partial void UpdateShoppingListsUser(ShoppingListsUser instance);
+    partial void DeleteShoppingListsUser(ShoppingListsUser instance);
     #endregion
 		
 		public BalderDataContext() : 
@@ -68,11 +77,11 @@ namespace DAL
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<Product> Products
+		public System.Data.Linq.Table<Credential> Credentials
 		{
 			get
 			{
-				return this.GetTable<Product>();
+				return this.GetTable<Credential>();
 			}
 		}
 		
@@ -83,9 +92,410 @@ namespace DAL
 				return this.GetTable<User>();
 			}
 		}
+		
+		public System.Data.Linq.Table<Product> Products
+		{
+			get
+			{
+				return this.GetTable<Product>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ShoppingList> ShoppingLists
+		{
+			get
+			{
+				return this.GetTable<ShoppingList>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ShoppingListsProduct> ShoppingListsProducts
+		{
+			get
+			{
+				return this.GetTable<ShoppingListsProduct>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ShoppingListsUser> ShoppingListsUsers
+		{
+			get
+			{
+				return this.GetTable<ShoppingListsUser>();
+			}
+		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Products")]
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Credentials")]
+	public partial class Credential : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _UserID;
+		
+		private string _Password;
+		
+		private string _Salt;
+		
+		private EntityRef<User> _User;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnUserIDChanging(int value);
+    partial void OnUserIDChanged();
+    partial void OnPasswordChanging(string value);
+    partial void OnPasswordChanged();
+    partial void OnSaltChanging(string value);
+    partial void OnSaltChanged();
+    #endregion
+		
+		public Credential()
+		{
+			this._User = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int UserID
+		{
+			get
+			{
+				return this._UserID;
+			}
+			set
+			{
+				if ((this._UserID != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUserIDChanging(value);
+					this.SendPropertyChanging();
+					this._UserID = value;
+					this.SendPropertyChanged("UserID");
+					this.OnUserIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Password", DbType="VarChar(32) NOT NULL", CanBeNull=false)]
+		public string Password
+		{
+			get
+			{
+				return this._Password;
+			}
+			set
+			{
+				if ((this._Password != value))
+				{
+					this.OnPasswordChanging(value);
+					this.SendPropertyChanging();
+					this._Password = value;
+					this.SendPropertyChanged("Password");
+					this.OnPasswordChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Salt", DbType="VarChar(32)")]
+		public string Salt
+		{
+			get
+			{
+				return this._Salt;
+			}
+			set
+			{
+				if ((this._Salt != value))
+				{
+					this.OnSaltChanging(value);
+					this.SendPropertyChanging();
+					this._Salt = value;
+					this.SendPropertyChanged("Salt");
+					this.OnSaltChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Credential", Storage="_User", ThisKey="UserID", OtherKey="UserId", IsForeignKey=true)]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.Credential = null;
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.Credential = this;
+						this._UserID = value.UserId;
+					}
+					else
+					{
+						this._UserID = default(int);
+					}
+					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[User]")]
+	public partial class User : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _UserId;
+		
+		private string _FName;
+		
+		private string _LName;
+		
+		private string _UserName;
+		
+		private string _Email;
+		
+		private EntityRef<Credential> _Credential;
+		
+		private EntitySet<ShoppingListsUser> _ShoppingListsUsers;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnUserIdChanging(int value);
+    partial void OnUserIdChanged();
+    partial void OnFNameChanging(string value);
+    partial void OnFNameChanged();
+    partial void OnLNameChanging(string value);
+    partial void OnLNameChanged();
+    partial void OnUserNameChanging(string value);
+    partial void OnUserNameChanged();
+    partial void OnEmailChanging(string value);
+    partial void OnEmailChanged();
+    #endregion
+		
+		public User()
+		{
+			this._Credential = default(EntityRef<Credential>);
+			this._ShoppingListsUsers = new EntitySet<ShoppingListsUser>(new Action<ShoppingListsUser>(this.attach_ShoppingListsUsers), new Action<ShoppingListsUser>(this.detach_ShoppingListsUsers));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int UserId
+		{
+			get
+			{
+				return this._UserId;
+			}
+			set
+			{
+				if ((this._UserId != value))
+				{
+					this.OnUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._UserId = value;
+					this.SendPropertyChanged("UserId");
+					this.OnUserIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FName", DbType="VarChar(50)")]
+		public string FName
+		{
+			get
+			{
+				return this._FName;
+			}
+			set
+			{
+				if ((this._FName != value))
+				{
+					this.OnFNameChanging(value);
+					this.SendPropertyChanging();
+					this._FName = value;
+					this.SendPropertyChanged("FName");
+					this.OnFNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LName", DbType="VarChar(50)")]
+		public string LName
+		{
+			get
+			{
+				return this._LName;
+			}
+			set
+			{
+				if ((this._LName != value))
+				{
+					this.OnLNameChanging(value);
+					this.SendPropertyChanging();
+					this._LName = value;
+					this.SendPropertyChanged("LName");
+					this.OnLNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserName", DbType="VarChar(50)")]
+		public string UserName
+		{
+			get
+			{
+				return this._UserName;
+			}
+			set
+			{
+				if ((this._UserName != value))
+				{
+					this.OnUserNameChanging(value);
+					this.SendPropertyChanging();
+					this._UserName = value;
+					this.SendPropertyChanged("UserName");
+					this.OnUserNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="VarChar(100)")]
+		public string Email
+		{
+			get
+			{
+				return this._Email;
+			}
+			set
+			{
+				if ((this._Email != value))
+				{
+					this.OnEmailChanging(value);
+					this.SendPropertyChanging();
+					this._Email = value;
+					this.SendPropertyChanged("Email");
+					this.OnEmailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Credential", Storage="_Credential", ThisKey="UserId", OtherKey="UserID", IsUnique=true, IsForeignKey=false)]
+		public Credential Credential
+		{
+			get
+			{
+				return this._Credential.Entity;
+			}
+			set
+			{
+				Credential previousValue = this._Credential.Entity;
+				if (((previousValue != value) 
+							|| (this._Credential.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Credential.Entity = null;
+						previousValue.User = null;
+					}
+					this._Credential.Entity = value;
+					if ((value != null))
+					{
+						value.User = this;
+					}
+					this.SendPropertyChanged("Credential");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_ShoppingListsUser", Storage="_ShoppingListsUsers", ThisKey="UserId", OtherKey="UserId")]
+		public EntitySet<ShoppingListsUser> ShoppingListsUsers
+		{
+			get
+			{
+				return this._ShoppingListsUsers;
+			}
+			set
+			{
+				this._ShoppingListsUsers.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ShoppingListsUsers(ShoppingListsUser entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_ShoppingListsUsers(ShoppingListsUser entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Product")]
 	public partial class Product : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
@@ -171,44 +581,291 @@ namespace DAL
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[User]")]
-	public partial class User : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ShoppingList")]
+	public partial class ShoppingList : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private int _UserId;
+		private int _ShoppingListId;
 		
-		private string _FName;
+		private string _ShoppingListName;
 		
-		private string _LName;
+		private int _CreationDate;
 		
-		private string _UserName;
+		private System.Nullable<int> _CompletionDate;
 		
-		private string _Email;
+		private EntityRef<ShoppingListsUser> _ShoppingListsUser;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnUserIdChanging(int value);
-    partial void OnUserIdChanged();
-    partial void OnFNameChanging(string value);
-    partial void OnFNameChanged();
-    partial void OnLNameChanging(string value);
-    partial void OnLNameChanged();
-    partial void OnUserNameChanging(string value);
-    partial void OnUserNameChanged();
-    partial void OnEmailChanging(string value);
-    partial void OnEmailChanged();
+    partial void OnShoppingListIdChanging(int value);
+    partial void OnShoppingListIdChanged();
+    partial void OnShoppingListNameChanging(string value);
+    partial void OnShoppingListNameChanged();
+    partial void OnCreationDateChanging(int value);
+    partial void OnCreationDateChanged();
+    partial void OnCompletionDateChanging(System.Nullable<int> value);
+    partial void OnCompletionDateChanged();
     #endregion
 		
-		public User()
+		public ShoppingList()
 		{
+			this._ShoppingListsUser = default(EntityRef<ShoppingListsUser>);
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShoppingListId", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int ShoppingListId
+		{
+			get
+			{
+				return this._ShoppingListId;
+			}
+			set
+			{
+				if ((this._ShoppingListId != value))
+				{
+					this.OnShoppingListIdChanging(value);
+					this.SendPropertyChanging();
+					this._ShoppingListId = value;
+					this.SendPropertyChanged("ShoppingListId");
+					this.OnShoppingListIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShoppingListName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string ShoppingListName
+		{
+			get
+			{
+				return this._ShoppingListName;
+			}
+			set
+			{
+				if ((this._ShoppingListName != value))
+				{
+					this.OnShoppingListNameChanging(value);
+					this.SendPropertyChanging();
+					this._ShoppingListName = value;
+					this.SendPropertyChanged("ShoppingListName");
+					this.OnShoppingListNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreationDate", DbType="Int NOT NULL")]
+		public int CreationDate
+		{
+			get
+			{
+				return this._CreationDate;
+			}
+			set
+			{
+				if ((this._CreationDate != value))
+				{
+					this.OnCreationDateChanging(value);
+					this.SendPropertyChanging();
+					this._CreationDate = value;
+					this.SendPropertyChanged("CreationDate");
+					this.OnCreationDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CompletionDate", DbType="Int")]
+		public System.Nullable<int> CompletionDate
+		{
+			get
+			{
+				return this._CompletionDate;
+			}
+			set
+			{
+				if ((this._CompletionDate != value))
+				{
+					this.OnCompletionDateChanging(value);
+					this.SendPropertyChanging();
+					this._CompletionDate = value;
+					this.SendPropertyChanged("CompletionDate");
+					this.OnCompletionDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ShoppingList_ShoppingListsUser", Storage="_ShoppingListsUser", ThisKey="ShoppingListId", OtherKey="ShoppingListId", IsUnique=true, IsForeignKey=false)]
+		public ShoppingListsUser ShoppingListsUser
+		{
+			get
+			{
+				return this._ShoppingListsUser.Entity;
+			}
+			set
+			{
+				ShoppingListsUser previousValue = this._ShoppingListsUser.Entity;
+				if (((previousValue != value) 
+							|| (this._ShoppingListsUser.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ShoppingListsUser.Entity = null;
+						previousValue.ShoppingList = null;
+					}
+					this._ShoppingListsUser.Entity = value;
+					if ((value != null))
+					{
+						value.ShoppingList = this;
+					}
+					this.SendPropertyChanged("ShoppingListsUser");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ShoppingListsProduct")]
+	public partial class ShoppingListsProduct
+	{
+		
+		private int _ShoppingListId;
+		
+		private int _ProductsId;
+		
+		private System.Nullable<int> _Amount;
+		
+		public ShoppingListsProduct()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShoppingListId", DbType="Int NOT NULL")]
+		public int ShoppingListId
+		{
+			get
+			{
+				return this._ShoppingListId;
+			}
+			set
+			{
+				if ((this._ShoppingListId != value))
+				{
+					this._ShoppingListId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProductsId", DbType="Int NOT NULL")]
+		public int ProductsId
+		{
+			get
+			{
+				return this._ProductsId;
+			}
+			set
+			{
+				if ((this._ProductsId != value))
+				{
+					this._ProductsId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Amount", DbType="Int")]
+		public System.Nullable<int> Amount
+		{
+			get
+			{
+				return this._Amount;
+			}
+			set
+			{
+				if ((this._Amount != value))
+				{
+					this._Amount = value;
+				}
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ShoppingListsUser")]
+	public partial class ShoppingListsUser : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ShoppingListId;
+		
+		private int _UserId;
+		
+		private EntityRef<User> _User;
+		
+		private EntityRef<ShoppingList> _ShoppingList;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnShoppingListIdChanging(int value);
+    partial void OnShoppingListIdChanged();
+    partial void OnUserIdChanging(int value);
+    partial void OnUserIdChanged();
+    #endregion
+		
+		public ShoppingListsUser()
+		{
+			this._User = default(EntityRef<User>);
+			this._ShoppingList = default(EntityRef<ShoppingList>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShoppingListId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ShoppingListId
+		{
+			get
+			{
+				return this._ShoppingListId;
+			}
+			set
+			{
+				if ((this._ShoppingListId != value))
+				{
+					if (this._ShoppingList.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnShoppingListIdChanging(value);
+					this.SendPropertyChanging();
+					this._ShoppingListId = value;
+					this.SendPropertyChanged("ShoppingListId");
+					this.OnShoppingListIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="Int NOT NULL")]
 		public int UserId
 		{
 			get
@@ -219,6 +876,10 @@ namespace DAL
 			{
 				if ((this._UserId != value))
 				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnUserIdChanging(value);
 					this.SendPropertyChanging();
 					this._UserId = value;
@@ -228,82 +889,70 @@ namespace DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FName", DbType="VarChar(50)")]
-		public string FName
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_ShoppingListsUser", Storage="_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+		public User User
 		{
 			get
 			{
-				return this._FName;
+				return this._User.Entity;
 			}
 			set
 			{
-				if ((this._FName != value))
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
 				{
-					this.OnFNameChanging(value);
 					this.SendPropertyChanging();
-					this._FName = value;
-					this.SendPropertyChanged("FName");
-					this.OnFNameChanged();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.ShoppingListsUsers.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.ShoppingListsUsers.Add(this);
+						this._UserId = value.UserId;
+					}
+					else
+					{
+						this._UserId = default(int);
+					}
+					this.SendPropertyChanged("User");
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LName", DbType="VarChar(50)")]
-		public string LName
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ShoppingList_ShoppingListsUser", Storage="_ShoppingList", ThisKey="ShoppingListId", OtherKey="ShoppingListId", IsForeignKey=true)]
+		public ShoppingList ShoppingList
 		{
 			get
 			{
-				return this._LName;
+				return this._ShoppingList.Entity;
 			}
 			set
 			{
-				if ((this._LName != value))
+				ShoppingList previousValue = this._ShoppingList.Entity;
+				if (((previousValue != value) 
+							|| (this._ShoppingList.HasLoadedOrAssignedValue == false)))
 				{
-					this.OnLNameChanging(value);
 					this.SendPropertyChanging();
-					this._LName = value;
-					this.SendPropertyChanged("LName");
-					this.OnLNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-		public string UserName
-		{
-			get
-			{
-				return this._UserName;
-			}
-			set
-			{
-				if ((this._UserName != value))
-				{
-					this.OnUserNameChanging(value);
-					this.SendPropertyChanging();
-					this._UserName = value;
-					this.SendPropertyChanged("UserName");
-					this.OnUserNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="VarChar(1) NOT NULL", CanBeNull=false)]
-		public string Email
-		{
-			get
-			{
-				return this._Email;
-			}
-			set
-			{
-				if ((this._Email != value))
-				{
-					this.OnEmailChanging(value);
-					this.SendPropertyChanging();
-					this._Email = value;
-					this.SendPropertyChanged("Email");
-					this.OnEmailChanged();
+					if ((previousValue != null))
+					{
+						this._ShoppingList.Entity = null;
+						previousValue.ShoppingListsUser = null;
+					}
+					this._ShoppingList.Entity = value;
+					if ((value != null))
+					{
+						value.ShoppingListsUser = this;
+						this._ShoppingListId = value.ShoppingListId;
+					}
+					else
+					{
+						this._ShoppingListId = default(int);
+					}
+					this.SendPropertyChanged("ShoppingList");
 				}
 			}
 		}
