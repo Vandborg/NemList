@@ -8,7 +8,20 @@ namespace DAL
 {
     class UserDb
     {
-        using (BalderDataContext _db = new BalderDataContext());
-        _db.
+        void CreateUser(string fname, string lname, string uname, string email)
+        {
+            using (var db = new BalderDataContext())
+            {
+                User u = new User();
+
+                fname = u.FName;
+                lname = u.LName;
+                uname = u.UserName;
+                email = u.Email;
+
+                db.Users.InsertOnSubmit(u);
+                db.SubmitChanges();
+            }
+        }
     }
 }
