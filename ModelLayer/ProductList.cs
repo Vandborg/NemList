@@ -13,13 +13,15 @@ namespace ModelLayer
         public DateTime completionDate { get; set; }
 
         //Lists
-        public List<User> users { get; set; }
-        public List<Product> products { get; set; }
+        //public List<User> users { get; set; }
+        //public List<Product> products { get; set; }
 
 
-        public ProductList()
+        public ProductList(string listName, DateTime creationDate, DateTime completionDate)
         {
-
+            this.listName = listName;
+            this.creationDate = creationDate;
+            this.completionDate = completionDate;
         }
     }
 }
