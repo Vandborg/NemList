@@ -2,6 +2,8 @@
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DAL;
+using BusinessLayer;
 
 namespace UnitTestLayer
 {
@@ -59,11 +61,12 @@ namespace UnitTestLayer
         #endregion
 
         [TestMethod]
-        public void TestMethod1()
+        public void CreateUser()
         {
-            //
-            // TODO: Add test logic here
-            //
+            //var u = new User();
+            IFUserB u = new UserB();
+            u.CreateUser("Hans", "Eriksen", "Hansenman", "hans@eriksen.dk");
+
         }
     }
 }

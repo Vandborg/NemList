@@ -9,12 +9,12 @@ namespace BusinessLayer
 {
     public class UserB : IFUserB
     {
-        public int CreateUser(string fname, string lname, string uname, string email)
+        public void CreateUser(string fname, string lname, string uname, string email)
         {
             throw new NotImplementedException();
         }
 
-        public User GetUserById(int id)
+        public ModelLayer.User GetUserById(int id)
         {
             throw new NotImplementedException();
         }

@@ -9,7 +9,7 @@ namespace BusinessLayer
 {
     public interface IFUserB
     {
-        int CreateUser(string fname, string lname, string uname, string email);
-        User GetUserById(int id);
+        void CreateUser(string fname, string lname, string uname, string email);
+        ModelLayer.User GetUserById(int id);
     }
 }
