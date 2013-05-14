@@ -6,18 +6,18 @@ using System.Data.Linq;
 
 namespace DAL
 {
-    class UserDb
+    public class UserDb
     {
-        void CreateUser(string fname, string lname, string uname, string email)
+        public void CreateUser(string fname, string lname, string uname, string email)
         {
             using (var db = new BalderDataContext())
             {
                 User u = new User();
 
-                fname = u.FName;
-                lname = u.LName;
-                uname = u.UserName;
-                email = u.Email;
+                u.FName = fname;
+                u.LName = lname;
+                u.UserName = uname;
+                u.Email = email;
 
                 db.Users.InsertOnSubmit(u);
                 db.SubmitChanges();

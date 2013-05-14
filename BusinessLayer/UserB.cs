@@ -11,7 +11,8 @@ namespace BusinessLayer
     {
         public void CreateUser(string fname, string lname, string uname, string email)
         {
-            throw new NotImplementedException();
+            var udb = new UserDb();
+            udb.CreateUser(fname, lname, uname, email);
         }
 
         public ModelLayer.User GetUserById(int id)
