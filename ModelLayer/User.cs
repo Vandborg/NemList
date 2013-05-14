@@ -5,8 +5,7 @@ using System.Text;
 
 namespace ModelLayer
 {
-    public class Class1
+    class User
     {
-        //Test
     }
 }
